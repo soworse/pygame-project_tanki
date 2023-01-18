@@ -3,7 +3,7 @@ import os
 import sys
 import random
 
-#cтартовый экран
+'''#cтартовый экран
 pygame.init()
 arrow = pygame.image.load('old-video-game-background-2451118.jpg')
 DEFAULT_IMAGE_SIZE = (500, 500)
@@ -28,7 +28,7 @@ while True:
     text_h = text.get_height()
     screen.blit(text, (text_x, text_y))
     screen.blit(text1, (50, 300))
-    pygame.display.flip()
+    pygame.display.flip()'''
 #главный экран
 pygame.init()
 arrow = pygame.image.load('Tank-GTA2.png')
