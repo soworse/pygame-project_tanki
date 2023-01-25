@@ -52,16 +52,23 @@ def start_screen():
     intro_text = ["FASHION TANKI", 'press any button to start']
     fon = pygame.transform.scale(load_image('old-video-game-background-2451118.jpg'), (700, 700))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 350
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('white'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
+    text_coord = 350, 350
+    font = pygame.font.Font(None, 50)
+    text = font.render("FASHION TANHKI", True, (100, 255, 100))
+    text_x = 150
+    text_y = 150
+    text_w = text.get_width()
+    text_h = text.get_height()
+    screen.blit(text, (text_x, text_y))
+    font = pygame.font.Font(None, 20)
+    pygame.draw.rect(screen, (0, 255, 0), (text_x - 10, text_y - 10,
+                                           text_w + 20, text_h + 20), 1)
+    text = font.render("PRESS ANY BUTTON TO START", True, (255, 255, 255))
+    text_x = 190
+    text_y = 400
+    text_w = text.get_width()
+    text_h = text.get_height()
+    screen.blit(text, (text_x, text_y))
 
     while True:
         for event in pygame.event.get():
