@@ -1,8 +1,10 @@
 import os
 import sys
 import pygame
+
 clock = pygame.time.Clock()
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 600, 600
+DEFAULT_IMAGE_SIZE = (100, 100)
 
 pygame.init()
 size = width, height = 500, 500
@@ -28,85 +30,131 @@ class F_screen(pygame.sprite.Sprite):
         self.rect.y = 0
 
 
-class Hero(pygame.sprite.Sprite):
+class Hero1(pygame.sprite.Sprite):
     def __init__(self, *group):
-        super(Hero, self).__init__(*group)
-        DEFAULT_IMAGE_SIZE = (100, 100)
-        self.image = load_image('tank.png')
+        super(Hero1, self).__init__(*group)
+        self.image = load_image('tankT_r.png')
         self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
-        self.dig = 0
+        self.rect.x = 100
+        self.rect.y = 100
 
     def update(self, vx, vy):
         self.rect.x += vx
         self.rect.y += vy
 
     def turn(self, a):
-        self.image = pygame.transform.rotate(self.image, abs(a - self.dig))
-        self.dig = a
-        print(self.dig, '     ', a)
+        if a == 0:
+            self.image = load_image('tankT_r.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+        elif a == 90:
+            self.image = load_image('tankR_r.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+
+        elif a == 180:
+            self.image = load_image('tankB_r.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+        else:
+            self.image = load_image('tankL_r.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+
+class Hero2(pygame.sprite.Sprite):
+    def __init__(self, *group):
+        super(Hero2, self).__init__(*group)
+        self.image = load_image('tankT_r.png')
+        self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+        self.rect = self.image.get_rect()
+        self.rect.x = 100
+        self.rect.y = 100
+
+    def update(self, vx, vy):
+        self.rect.x += vx
+        self.rect.y += vy
+
+    def turn(self, a):
+        if a == 0:
+            self.image = load_image('tankT_b.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+        elif a == 90:
+            self.image = load_image('tankR_b.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+
+        elif a == 180:
+            self.image = load_image('tankB_b.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
+        else:
+            self.image = load_image('tankL_b.png')
+            self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
 
 def start_screen():
     intro_text = ["FASHION TANKI", 'press any button to start']
-    fon = pygame.transform.scale(load_image('old-video-game-background-2451118.jpg'), (700, 700))
+    fon = pygame.transform.scale(load_image('f_screen.jpg'), (700, 700))
     screen.blit(fon, (0, 0))
-    text_coord = 350, 350
-    font = pygame.font.Font(None, 50)
-    text = font.render("FASHION TANHKI", True, (100, 255, 100))
-    text_x = 150
-    text_y = 150
-    text_w = text.get_width()
-    text_h = text.get_height()
-    screen.blit(text, (text_x, text_y))
-    font = pygame.font.Font(None, 20)
-    pygame.draw.rect(screen, (0, 255, 0), (text_x - 10, text_y - 10,
-                                           text_w + 20, text_h + 20), 1)
-    text = font.render("PRESS ANY BUTTON TO START", True, (255, 255, 255))
-    text_x = 190
-    text_y = 400
-    text_w = text.get_width()
-    text_h = text.get_height()
-    screen.blit(text, (text_x, text_y))
+    font = pygame.font.Font(None, 30)
+    text_coord = 350
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                terminate()
+                exit(0)
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
                 return
         pygame.display.flip()
         clock.tick(50)
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE)
     start_screen()
     all_sprites = pygame.sprite.Group()
-    print(all_sprites)
-    hero = Hero(all_sprites)
+    hero1 = Hero1(all_sprites)
+    hero2 = Hero2(all_sprites)
     running = True
-    pos_ = 0, 0
+    keys = pygame.key.get_pressed()
+    pygame.key.set_repeat(1, 100)
     while running:
         pygame.mouse.set_visible(0)
         screen.fill('white')
+        pygame.event.pump()
+        keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    hero.update(-10, 0)
-                    hero.turn(0)
-                if event.key == pygame.K_RIGHT:
-                    hero.update(10, 0)
-                    hero.turn(180)
-                if event.key == pygame.K_UP:
-                    hero.update(0, -10)
-                    hero.turn(90)
-                if event.key == pygame.K_DOWN:
-                    hero.update(0, 10)
-                    hero.turn(270)
+            if keys[pygame.K_LEFT]:
+                hero2.update(-10, 0)
+                hero2.turn(270)
+            elif keys[pygame.K_RIGHT]:
+                hero2.update(10, 0)
+                hero2.turn(90)
+            elif keys[pygame.K_UP]:
+                hero2.update(0, -10)
+                hero2.turn(0)
+            elif keys[pygame.K_DOWN]:
+                hero2.update(0, 10)
+                hero2.turn(180)
+
+            if keys[pygame.K_a]:
+                hero1.update(-10, 0)
+                hero1.turn(270)
+            elif keys[pygame.K_d]:
+                hero1.update(10, 0)
+                hero1.turn(90)
+            elif keys[pygame.K_w]:
+                hero1.update(0, -10)
+                hero1.turn(0)
+            elif keys[pygame.K_s]:
+                hero1.update(0, 10)
+                hero1.turn(180)
         all_sprites.draw(screen)
         pygame.display.flip()
     pygame.quit()
