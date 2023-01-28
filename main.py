@@ -36,8 +36,8 @@ class Hero(pygame.sprite.Sprite):
         self.image = load_image('tankT.png')
         self.image = pygame.transform.scale(self.image, DEFAULT_IMAGE_SIZE)
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
+        self.rect.x = 100
+        self.rect.y = 100
 
     def update(self, vx, vy):
         self.rect.x += vx
@@ -90,29 +90,31 @@ def main():
     screen = pygame.display.set_mode(WINDOW_SIZE)
     start_screen()
     all_sprites = pygame.sprite.Group()
-    print(all_sprites)
     hero = Hero(all_sprites)
     running = True
-    pos_ = 0, 0
+    keys = pygame.key.get_pressed()
+    pygame.key.set_repeat(1, 100)
     while running:
         pygame.mouse.set_visible(0)
         screen.fill('white')
+        pygame.event.pump()
+        keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    hero.update(-10, 0)
-                    hero.turn(270)
-                if event.key == pygame.K_RIGHT:
-                    hero.update(10, 0)
-                    hero.turn(90)
-                if event.key == pygame.K_UP:
-                    hero.update(0, -10)
-                    hero.turn(0)
-                if event.key == pygame.K_DOWN:
-                    hero.update(0, 10)
-                    hero.turn(180)
+            if keys[pygame.K_LEFT]:
+                hero.update(-10, 0)
+                hero.turn(270)
+            elif keys[pygame.K_RIGHT]:
+                hero.update(10, 0)
+                hero.turn(90)
+            elif keys[pygame.K_UP]:
+                hero.update(0, -10)
+                hero.turn(0)
+            elif keys[pygame.K_DOWN]:
+                hero.update(0, 10)
+                hero.turn(180)
+
         all_sprites.draw(screen)
         pygame.display.flip()
     pygame.quit()
